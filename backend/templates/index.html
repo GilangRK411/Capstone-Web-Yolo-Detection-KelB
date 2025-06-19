@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YOLO CCTV Stream</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .video-container {
+            margin: 20px 0;
+        }
+        .video-feed {
+            max-width: 100%;
+            border: 2px solid #333;
+            border-radius: 8px;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .active {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .inactive {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YOLO CCTV Stream</h1>
+        <div class="video-container">
+            <img src="{{ url_for('video_feed') }}" class="video-feed" alt="Video Stream">
+        </div>
+        <div class="controls">
+            <button onclick="toggleCamera('on')">Hidupkan Kamera</button>
+            <button onclick="toggleCamera('off')">Matikan Kamera</button>
+        </div>
+        <div id="status" class="status inactive">
+            Status: Kamera Nonaktif
+        </div>
+    </div>
+
+    <script>
+        function toggleCamera(action) {
+            fetch(`/camera_${action}`)
+                .then(response => response.text())
+                .then(data => {
+                    const statusDiv = document.getElementById('status');
+                    if (action === 'on') {
+                        statusDiv.textContent = 'Status: Kamera Aktif';
+                        statusDiv.className = 'status active';
+                    } else {
+                        statusDiv.textContent = 'Status: Kamera Nonaktif';
+                        statusDiv.className = 'status inactive';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html> 
